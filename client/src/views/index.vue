@@ -5,7 +5,7 @@
 
       <!-- 数据来源： http://www.todayonhistory.com/code/ -->
       <iframe
-        src="http://www.todayonhistory.com/code/4.html?w=500&h=25&bky=dotted&bks=1&bkc=#D0D0D0&fs=16&fc=#015bf1&hg=25&ie=0&xhx=none&sd=3000&px=2&len=0&sk=1&n=0"
+        src="https://www.todayonhistory.com/code/4.html?w=500&h=25&bky=dotted&bks=1&bkc=#D0D0D0&fs=16&fc=#015bf1&hg=25&ie=0&xhx=none&sd=3000&px=2&len=0&sk=1&n=0"
         width="500"
         height="25"
         scrolling="no"
