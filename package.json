@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "postinstall": "unset NODE_ENV && npm i -g @vue/cli-service @vue/cli-plugin-babel vue-template-compiler && npm run client-install && npm run client-build && NODE_ENV=production",
+    "postinstall": "NODE_ENV=development && npm run client-install && npm run client-build && NODE_ENV=production",
     "client": "npm start --prefix client",
     "client-build": "npm run build --prefix client",
     "client-install": "npm install --prefix client",
