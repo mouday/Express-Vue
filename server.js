@@ -13,9 +13,7 @@ const auths = require("./routes/api/auths");
 require('express-async-errors');
 
 const path = require('path')
-
 const serveStatic = require('serve-static')
-app.use(serveStatic(path.join(__dirname, 'client/dist')))
 
 // 配置
 const db = require("./config/keys").mongoURL;
@@ -34,6 +32,7 @@ mongoose.connect(db, mongoOptions).then(() => {
 
 const app = express();
 
+app.use(serveStatic(path.join(__dirname, 'client/dist')))
 
 /**
  * 使用 body-parser 中间件
