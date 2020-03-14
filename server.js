@@ -1,7 +1,4 @@
 const express = require("express");
-// 捕获异常
-require('express-async-errors');
-
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
@@ -12,7 +9,13 @@ const profiles = require("./routes/api/profiles");
 const articles = require("./routes/api/articles");
 const auths = require("./routes/api/auths");
 
+// 捕获异常
+require('express-async-errors');
 
+const path = require('path')
+
+const serveStatic = require('serve-static')
+app.use(serveStatic(path.join(__dirname, 'client/dist')))
 
 // 配置
 const db = require("./config/keys").mongoURL;
