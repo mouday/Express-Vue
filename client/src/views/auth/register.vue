@@ -3,7 +3,7 @@
     <h1>注册</h1>
 
     <div class="register-box">
-      <el-form ref="registerForm" status-icon :model="form" label-width="80px">
+      <el-form ref="registerForm" :rules="rules" status-icon :model="form" label-width="80px">
         <el-form-item label="用户名" prop="name">
           <el-input v-model="form.name"></el-input>
         </el-form-item>
@@ -16,12 +16,6 @@
         <el-form-item label="确认密码" prop="confirmPassword">
           <el-input v-model="form.confirmPassword" type="password"></el-input>
         </el-form-item>
-        <el-form-item label="选择身份">
-          <el-select v-model="form.identity">
-            <el-option label="管理员" value="manager"></el-option>
-            <el-option label="员工" value="employee"></el-option>
-          </el-select>
-        </el-form-item>
 
         <el-form-item>
           <el-button type="primary" class="submit-btn" @click="onSubmit('registerForm')">立即创建</el-button>
@@ -32,8 +26,10 @@
 </template>
 
 <script>
+import { userTypes } from "@/views/user/index.js";
+
 export default {
-  name: "",
+  name: "register",
 
   props: [],
 
@@ -50,13 +46,15 @@ export default {
     };
 
     return {
+      userTypes,
+
       // 表单数据
       form: {
-        name: "user",
-        email: "user1@email.com",
-        password: "123456",
-        confirmPassword: "123456",
-        identity: ""
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+        identity: "employee"
       },
 
       /**
@@ -89,11 +87,12 @@ export default {
   },
   methods: {
     async register() {
-      const res = await this.$axios.post("/api/users/register", this.form);
+      const res = await this.$axios.post("/api/auths/register", this.form);
       console.log(res);
 
       if (res.code == 0) {
         this.$message.success("注册成功");
+        this.$router.push({ name: "Login" });
       } else {
         this.$message.error(res.msg);
       }
@@ -104,8 +103,7 @@ export default {
         if (valid) {
           this.register();
         } else {
-          console.log("error submit!!");
-          return false;
+          this.$message.error("请填写正确的信息！");
         }
       });
     }

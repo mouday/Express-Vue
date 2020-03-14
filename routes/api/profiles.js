@@ -25,7 +25,7 @@ router.post("/add", passport.authenticate('jwt', { session: false }), async (req
     }
     const profile = await new Profile(data).save();
 
-    res.json(profile)
+    res.json({ code: 0, msg: 'success', data: profile })
 })
 
 /**
@@ -33,7 +33,7 @@ router.post("/add", passport.authenticate('jwt', { session: false }), async (req
  */
 router.get("/list", passport.authenticate('jwt', { session: false }), async (req, res) => {
     const list = await Profile.find()
-    res.json(list)
+    res.json({ code: 0, msg: 'success', data: list })
 })
 
 /**
@@ -41,7 +41,7 @@ router.get("/list", passport.authenticate('jwt', { session: false }), async (req
  */
 router.get("/:id", passport.authenticate('jwt', { session: false }), async (req, res) => {
     const row = await Profile.findOne({ _id: req.params.id })
-    res.json(row)
+    res.json({ code: 0, msg: 'success', data: row })
 })
 
 /**

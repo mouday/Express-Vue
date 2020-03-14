@@ -1,10 +1,18 @@
 const express = require("express");
+// 捕获异常
+require('express-async-errors');
+
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const passport = require("passport");
 
+// 引入路由
 const users = require("./routes/api/users");
 const profiles = require("./routes/api/profiles");
+const articles = require("./routes/api/articles");
+const auths = require("./routes/api/auths");
+
+
 
 // 配置
 const db = require("./config/keys").mongoURL;
@@ -23,6 +31,7 @@ mongoose.connect(db, mongoOptions).then(() => {
 
 const app = express();
 
+
 /**
  * 使用 body-parser 中间件
  */
@@ -37,24 +46,28 @@ app.use(passport.initialize());
 
 require("./config/passport")(passport);
 
-//设置允许跨域访问该服务.
-app.all('*', function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header('Access-Control-Allow-Methods', '*');
-    res.header("Content-Type", "application/json;charset=utf-8");
-    res.header('Access-Control-Allow-Headers', 'Content-Type');
-    next();
-});
 
 app.get("/", (req, res) => {
     res.send("hello world!");
 })
 
 // 使用路由
-app.use("/api/users", users)
+app.use("/api/auths", auths)
 app.use("/api/profiles", profiles)
+app.use("/api/users", passport.authenticate('jwt', { session: false }), users)
+app.use("/api/articles", passport.authenticate('jwt', { session: false }), articles)
 
-const port = process.env.PORT || 5000;
+// 异常处理
+function errorHandler(err, req, res, next) {
+    console.error(err.stack);
+    res.status(500).send(err.message);
+}
+
+app.use(errorHandler);
+
+
+// 配置端口，启用监听
+const port = 5000;
 
 app.listen(port, () => {
     console.log(`Server runing on http://127.0.0.1:${port}`);
