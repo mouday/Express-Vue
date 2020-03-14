@@ -34,6 +34,19 @@ const app = express();
 
 app.use(serveStatic(path.join(__dirname, 'client/dist')))
 
+// 实现CORS(跨域)
+app.all("*", (req, res, next) => {
+    // 配置跨域请求头
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.header(
+        "Access-Control-Allow-Headers",
+        "Content-type, Accept, X-Access-Token, X-Key"
+    );
+    if ("OPTIONS" == req.method) res.status(200).end();
+    else next();
+});
+
 /**
  * 使用 body-parser 中间件
  */
@@ -49,9 +62,9 @@ app.use(passport.initialize());
 require("./config/passport")(passport);
 
 
-app.get("/", (req, res) => {
-    res.send("hello world!");
-})
+// app.get("/", (req, res) => {
+//     res.send("hello world!");
+// })
 
 // 使用路由
 app.use("/api/auths", auths)
@@ -69,7 +82,7 @@ app.use(errorHandler);
 
 
 // 配置端口，启用监听
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.listen(port, () => {
     console.log(`Server runing on http://127.0.0.1:${port}`);
