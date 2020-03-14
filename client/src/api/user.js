@@ -13,10 +13,11 @@ export function getUserInfo(id) {
 /**
  * 获取用户列表
  */
-export function getUserList() {
+export function getUserList({ page, size }) {
     return request({
         url: '/api/users/list',
-        method: 'get'
+        method: 'get',
+        params: { page, size }
     })
 }
 
@@ -33,5 +34,16 @@ export function setUserInfo({ id, name, identity }) {
         url: '/api/users/update',
         method: 'post',
         data
+    })
+}
+
+/**
+ * 删除用户信息
+ */
+export function deleteUser(id) {
+    return request({
+        url: '/api/users/delete',
+        method: 'delete',
+        params: { id }
     })
 }

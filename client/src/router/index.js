@@ -8,9 +8,17 @@ const routes = [
   {
     path: '/',
     name: 'Index',
-    redirect: "/data",
     component: Index,
-    meta: { title: "首页", icon: 'el-icon-location', hidden: true }
+    redirect: "/home",
+    meta: { title: "首页", icon: 'el-icon-location', hidden: true },
+    children: [
+      {
+        path: 'home',
+        name: 'IndexHome',
+        component: () => import('../views/index.vue'),
+        meta: { title: "首页" },
+      }
+    ]
   },
 
   {
@@ -40,7 +48,6 @@ const routes = [
         meta: { title: "编辑数据", hidden: true },
       }
     ]
-
   },
   {
     path: '/user',

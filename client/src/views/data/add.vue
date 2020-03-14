@@ -26,6 +26,7 @@
 
 <script>
 import moment from "moment";
+import { getArticleById, addArticle } from "@/api/articles";
 
 export default {
   name: "DataAdd",
@@ -33,7 +34,7 @@ export default {
   data() {
     return {
       dataForm: {
-        _id: "",
+        id: "",
         publish_time: moment().format("YYYY-MM-DD HH:mm:ss"),
         title: "",
         content: ""
@@ -43,34 +44,29 @@ export default {
 
   methods: {
     async getData() {
-      const res = await this.$axios.get(
-        "/api/articles/get/" + this.dataForm._id
-      );
-
-      if (res.code == 0) {
-        this.dataForm = res.data;
-      }
+      const res = await getArticleById(this.dataForm.id);
+      this.dataForm = res.data;
     },
 
     submitForm(formName) {
-      this.$refs[formName].validate(valid => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
-          this.$axios.post("/api/articles/add", this.dataForm).then(res => {
-            // console.log(res);
-            if (res.code == 0) {
-              // 没有id的会添加，有id的会修改，给出不同的提示
-              if (!this.dataForm._id) {
-                this.$message.success("添加成功");
+          const res = await addArticle(this.dataForm);
 
-                this.$router.push({
-                  name: "DataAdd",
-                  query: { uid: res.data._id }
-                });
-              } else {
-                this.$message.success("修改成功");
-              }
+          // console.log(res);
+          if (res.code == 0) {
+            // 没有id的会添加，有id的会修改，给出不同的提示
+            if (!this.dataForm.id) {
+              this.$message.success("添加成功");
+
+              this.$router.push({
+                name: "DataAdd",
+                query: { id: res.data.id }
+              });
+            } else {
+              this.$message.success("修改成功");
             }
-          });
+          }
         } else {
           console.log("error submit!!");
           return false;
@@ -84,9 +80,9 @@ export default {
   },
 
   created() {
-    this.dataForm._id = this.$route.query.uid;
+    this.dataForm.id = this.$route.query.id;
 
-    if (this.dataForm._id) {
+    if (this.dataForm.id) {
       this.getData();
     }
   }

@@ -1,4 +1,7 @@
 const express = require("express");
+const User = require("../../models/User");
+const response = require('../../utils/response');
+
 
 const router = express.Router();
 
@@ -17,6 +20,7 @@ router.get("/info/:id", async (req, res) => {
             name: user.name,
             email: user.email,
             date: user.date,
+            avatar: user.avatar,
             identity: user.identity
         }
     }
@@ -28,23 +32,25 @@ router.get("/info/:id", async (req, res) => {
  * 注册用户列表
  */
 router.get("/list", async (req, res) => {
+    const page = parseInt(req.query.page || '1')
+    const size = parseInt(req.query.size || '5')
 
-    const rows = await User.find()
-    const data = []
+    const _list = await User.find().skip((page - 1) * size).limit(size)
 
-    for (let row of rows) {
-        const item = {
-            id: row['id'],
-            name: row['name'],
-            email: row['email'],
-            avatar: row['avatar'],
-            identity: row['identity'],
-            date: row['date'],
+    const list = _list.map(item => {
+        return {
+            id: item._id,
+            name: item.name,
+            email: item.email,
+            avatar: item.avatar,
+            identity: item.identity,
+            date: item.date,
         }
+    })
 
-        data.push(item)
-    }
-    res.json({ msg: "success", data: data, code: 0 })
+    const count = await User.countDocuments()
+
+    res.json(response.success({ count, list }))
 })
 
 /**
@@ -59,4 +65,18 @@ router.post("/update", async (req, res) => {
 
     res.json({ msg: "success", data: ret, code: 0 })
 })
+
+/**
+ * 删除用户信息
+ */
+router.delete("/delete", async (req, res) => {
+    const id = req.query.id;
+
+    const ret = await User.deleteOne({ _id: id })
+
+    res.json(response.success(ret))
+})
+
+
 module.exports = router;
+

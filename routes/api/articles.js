@@ -10,7 +10,7 @@ const router = express.Router();
  */
 router.post("/add", async (req, res) => {
 
-    const _id = req.body._id;
+    const id = req.body.id;
 
     const data = {
         title: req.body.title,
@@ -22,8 +22,8 @@ router.post("/add", async (req, res) => {
     let ret;
 
     // 有id就更新，没有就添加
-    if (_id) {
-        ret = await Article.updateOne({ _id: _id }, { $set: data });
+    if (id) {
+        ret = await Article.updateOne({ _id: id }, { $set: data });
         msg = 'update'
     } else {
         ret = await new Article(data).save();
@@ -41,8 +41,17 @@ router.get("/list", async (req, res) => {
     const size = parseInt(req.query.size || '5')
     // console.log(page, size);
 
-    const list = await Article.find().skip((page - 1) * size).limit(size)
-    const count = await Article.count()
+    const _list = await Article.find().skip((page - 1) * size).limit(size)
+    const list = _list.map(item => {
+        return {
+            id: item._id,
+            title: item.title,
+            content: item.content,
+            publish_time: item.publish_time
+        }
+    })
+
+    const count = await Article.countDocuments()
 
     res.json(response.success({ count, list }))
 })
@@ -54,7 +63,18 @@ router.get("/get/:id", async (req, res) => {
     console.log(req.params.id);
 
     const row = await Article.findOne({ _id: req.params.id })
-    res.json({ code: 0, msg: 'success', data: row })
+
+    let data = {}
+    if (row) {
+        data = {
+            id: row._id,
+            title: row.title,
+            content: row.content,
+            publish_time: row.publish_time
+        }
+    }
+
+    res.json({ code: 0, msg: 'success', data })
 })
 
 /**

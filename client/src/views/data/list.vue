@@ -16,8 +16,8 @@
 
       <el-table-column label="操作" header-align="center" width="150">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.row._id)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="handleDelete(scope.row._id)">删除</el-button>
+          <el-button size="mini" @click="handleEdit(scope.row.id)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.row.id)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -35,15 +35,10 @@
 
 <script>
 import moment from "moment";
-import DataBase from "./base";
+import { getArticleList, deleteArticle } from "@/api/articles";
 
 export default {
-  name: "",
-
-  props: [],
-  extends: DataBase,
-
-  components: {},
+  name: "DataList",
 
   data() {
     return {
@@ -55,8 +50,6 @@ export default {
     };
   },
 
-  computed: {},
-
   methods: {
     async getData() {
       const params = {
@@ -64,24 +57,23 @@ export default {
         size: this.pageSize
       };
 
-      const res = await this.getArticleList(params);
+      const res = await getArticleList(params);
       this.list = res.data.list;
       this.total = res.data.count;
     },
 
-    deleteRow(uid) {
-      this.$axios.delete("/api/articles/delete/" + uid).then(res => {
-        // console.log(res);
-        if (res.code == 0) {
-          this.$message.success("删除成功！");
-          this.getData();
-        } else {
-          this.$message.error(res.msg);
-        }
-      });
+    async deleteRow(id) {
+      const res = await deleteArticle(id);
+
+      if (res.code == 0) {
+        this.$message.success("删除成功！");
+        this.getData();
+      } else {
+        this.$message.error(res.msg);
+      }
     },
 
-    handleDelete(uid) {
+    handleDelete(id) {
       // 删除确认
       this.$confirm("即将删除该记录, 是否继续?", "提示", {
         confirmButtonText: "确定",
@@ -89,7 +81,7 @@ export default {
         type: "warning"
       })
         .then(() => {
-          this.deleteRow(uid);
+          this.deleteRow(id);
         })
         .catch(() => {
           this.$message({
@@ -99,8 +91,8 @@ export default {
         });
     },
 
-    handleEdit(uid) {
-      this.$router.push({ name: "DataEdit", query: { uid: uid } });
+    handleEdit(id) {
+      this.$router.push({ name: "DataEdit", query: { id: id } });
     }
   },
 
@@ -109,6 +101,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-</style>

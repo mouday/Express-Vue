@@ -14,11 +14,21 @@
           <el-input v-model="form.password" type="password"></el-input>
         </el-form-item>
         <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="form.confirmPassword" type="password"></el-input>
+          <el-input
+            v-model="form.confirmPassword"
+            type="password"
+            @keyup.enter.native="onSubmit('registerForm')"
+          ></el-input>
         </el-form-item>
 
         <el-form-item>
           <el-button type="primary" class="submit-btn" @click="onSubmit('registerForm')">立即创建</el-button>
+          <p>
+            已有账号？现在
+            <router-link to="/login">
+              <el-button type="text">登录</el-button>
+            </router-link>
+          </p>
         </el-form-item>
       </el-form>
     </div>
@@ -27,13 +37,10 @@
 
 <script>
 import { userTypes } from "@/views/user/index.js";
+import { userRegister } from "@/api/auths";
 
 export default {
   name: "register",
-
-  props: [],
-
-  components: {},
 
   data() {
     // 自定义校验规则
@@ -53,8 +60,7 @@ export default {
         name: "",
         email: "",
         password: "",
-        confirmPassword: "",
-        identity: "employee"
+        confirmPassword: ""
       },
 
       /**
@@ -87,7 +93,8 @@ export default {
   },
   methods: {
     async register() {
-      const res = await this.$axios.post("/api/auths/register", this.form);
+      const res = await userRegister(this.form);
+
       console.log(res);
 
       if (res.code == 0) {

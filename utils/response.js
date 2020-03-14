@@ -1,3 +1,4 @@
+// 通用的响应体
 const response = {
     data(data, code, msg) {
         return { data, code, msg }

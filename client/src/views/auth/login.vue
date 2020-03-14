@@ -1,23 +1,23 @@
 <template>
-  <div class="register">
+  <div class="login">
     <h1>登录</h1>
 
     <div class="register-box">
-      <el-form ref="registerForm" :rules="rules" status-icon :model="form" label-width="80px">
+      <el-form ref="loginForm" :rules="rules" status-icon :model="loginForm" label-width="80px">
         <el-form-item label="邮箱" prop="email">
-          <el-input v-model="form.email" type="email"></el-input>
+          <el-input v-model="loginForm.email" type="email"></el-input>
         </el-form-item>
 
         <el-form-item label="密码" prop="password">
           <el-input
-            v-model="form.password"
+            v-model="loginForm.password"
             type="password"
-            @keyup.enter.native="onSubmit('registerForm')"
+            @keyup.enter.native="onSubmit('loginForm')"
           ></el-input>
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" class="submit-btn" @click="onSubmit('registerForm')">登录</el-button>
+          <el-button type="primary" class="submit-btn" @click="onSubmit('loginForm')">登录</el-button>
           <p>
             还没有账号？现在
             <router-link to="/register">
@@ -33,6 +33,7 @@
 <script>
 import jwt_decode from "jwt-decode";
 import { isEmpty } from "@/uitls";
+import { userLogin } from "@/api/auths";
 
 export default {
   name: "login",
@@ -44,7 +45,7 @@ export default {
   data() {
     return {
       // 表单数据
-      form: {
+      loginForm: {
         email: "",
         password: ""
       },
@@ -71,7 +72,7 @@ export default {
   },
   methods: {
     async login() {
-      const res = await this.$axios.post("/api/auths/login", this.form);
+      const res = await userLogin(this.loginForm);
 
       if (res.code == 0) {
         const token = res.token;
@@ -106,12 +107,12 @@ export default {
 </script>
 
 <style scoped>
-.register {
+.login {
   width: 400px;
   margin: 0 auto;
-  padding-top: 150px;
+  padding-top: 50px;
 }
-.register h1 {
+.login h1 {
   font-size: 30px;
   text-align: center;
   line-height: 60px;

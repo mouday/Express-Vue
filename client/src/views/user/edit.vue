@@ -35,11 +35,7 @@ import { getUserInfo, setUserInfo } from "@/api/user.js";
 import { userTypes } from "./index";
 
 export default {
-  name: "",
-
-  props: [],
-
-  components: {},
+  name: "UserEdit",
 
   data() {
     return {
@@ -56,18 +52,10 @@ export default {
     };
   },
 
-  computed: {},
-
   methods: {
     async getData() {
       const res = await getUserInfo(this.userInfo.id);
       this.userInfo = res.data;
-    },
-
-    async updateSelfInfo() {
-      const res = await getUserInfo(this.userInfo.id);
-
-      this.$store.dispatch("setUser", res.data);
     },
 
     onSubmit(formName) {
@@ -75,12 +63,7 @@ export default {
         if (valid) {
           const res = await setUserInfo(this.userInfo);
           if (res.code == 0) {
-            this.$message.success("用户信息更新成功！");
-
-            // 如果修改的是自己的信息，更新一下
-            if (this.userInfo.id == this.$store.getters.user.id) {
-              this.updateSelfInfo();
-            }
+            this.$message.success("信息更新成功！重登生效");
           } else {
             this.$message.error(res.msg);
           }

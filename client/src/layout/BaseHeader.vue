@@ -5,15 +5,16 @@
 
     <!-- 右边信息 -->
     <div class="base-header-right">
+      <!-- <span>{{user.name}}</span> -->
+      <el-badge class="mark" :value="12" />
       <el-avatar :src="user.avatar" :size="30"></el-avatar>
-
-      <span>{{user.name}}</span>
 
       <!-- 下拉框 -->
       <el-dropdown @command="handleCommand" size="medium">
         <span class="el-dropdown-link">
           <i class="el-icon-arrow-down el-icon--right"></i>
         </span>
+
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="userInfo">用户信息</el-dropdown-item>
           <el-dropdown-item command="logout">退出</el-dropdown-item>
@@ -88,10 +89,16 @@ export default {
   display: flex;
   line-height: 30px;
 }
+
 .base-header-right span {
   margin-left: 10px;
 }
 .el-dropdown-link {
   color: white;
+}
+
+.item {
+  margin-top: 10px;
+  margin-right: 40px;
 }
 </style>
