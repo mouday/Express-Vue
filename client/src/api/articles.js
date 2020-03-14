@@ -17,7 +17,7 @@ export function getArticleList({ page = 1, size = 5 }) {
 export function deleteArticle(id) {
     return request({
         url: "/api/articles/delete/" + id,
-        method: 'get',
+        method: 'delete',
     })
 }
 
