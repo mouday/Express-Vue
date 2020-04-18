@@ -10,8 +10,8 @@
     "client-build": "npm run build --prefix client",
     "client-install": "npm install --prefix client",
     "start": "node app.js",
-    "server": "nodemon app.js --ignore client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "nodemon app.js --ignore client",
+    "all": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "peng",
   "license": "ISC",

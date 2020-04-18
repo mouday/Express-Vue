@@ -15,6 +15,7 @@ const users = require("./routes/api/users");
 const profiles = require("./routes/api/profiles");
 const articles = require("./routes/api/articles");
 const auths = require("./routes/api/auths");
+const todolists = require("./routes/api/todolists");
 
 // 捕获异常
 require('express-async-errors');
@@ -55,7 +56,9 @@ app.all("*", handler.crossDomainHandler);
  * 使用 body-parser 中间件
  */
 // 解析 application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({
+    extended: false
+}));
 // 解析 application/json
 app.use(bodyParser.json());
 
@@ -66,8 +69,13 @@ require("./config/passport")(passport);
 // 使用路由
 app.use("/api/auths", auths)
 app.use("/api/profiles", profiles)
-app.use("/api/users", passport.authenticate('jwt', { session: false }), users)
-app.use("/api/articles", passport.authenticate('jwt', { session: false }), articles)
+app.use("/api/todolists", todolists)
+app.use("/api/users", passport.authenticate('jwt', {
+    session: false
+}), users)
+app.use("/api/articles", passport.authenticate('jwt', {
+    session: false
+}), articles)
 
 // 异常处理
 app.use(handler.errorHandler);
